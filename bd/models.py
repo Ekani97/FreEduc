@@ -151,7 +151,7 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notif {self.id_notif}: {self.objet}"
-
+    
 
 class Reception(models.Model):
     """

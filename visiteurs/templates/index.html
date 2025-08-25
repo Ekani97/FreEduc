@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreEduc - Orientation Académique Intelligente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'academic-blue': '#1e3a8a',
+                        'academic-light': '#3b82f6',
+                        'success-green': '#10b981',
+                        'chat-bg': '#f8fafc',
+                        'chat-user': '#e0f2fe',
+                        'chat-bot': '#f1f5f9'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-academic-blue shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="bg-success-green p-2 rounded-lg mr-3">
+                        <i class="fas fa-graduation-cap text-white text-xl"></i>
+                    </div>
+                    <h1 class="text-white text-2xl font-bold">FreEduc</h1>
+                    <span class="text-blue-200 ml-2 text-sm">Orientation Académique</span>
+                </div>
+                
+                <!-- Boutons Header -->
+                <div class="flex space-x-3">
+                    <button onclick="openModal('loginModal')" class="bg-transparent border-2 border-white text-white px-4 py-2 rounded-lg hover:bg-white hover:text-academic-blue transition-all duration-300">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Connexion
+                    </button>
+                    <button onclick="openModal('registerModal')" class="bg-success-green text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300">
+                        <i class="fas fa-user-plus mr-2"></i>Inscription
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Section Principale - Chatbot -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <!-- Header Chatbot -->
+                    <div class="bg-gradient-to-r from-academic-blue to-academic-light p-4">
+                        <div class="flex items-center">
+                            <div class="bg-white p-2 rounded-full mr-3">
+                                <i class="fas fa-robot text-academic-blue text-xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-white text-xl font-semibold">Assistant d'Orientation</h2>
+                                <p class="text-blue-100 text-sm">Posez vos questions sur l'orientation académique</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Zone de Chat -->
+                    <div class="h-96 overflow-y-auto p-4 bg-chat-bg" id="chatArea">
+                        <!-- Message de bienvenue -->
+                        <div class="flex items-start mb-4">
+                            <div class="bg-academic-light p-2 rounded-full mr-3 flex-shrink-0">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs">
+                                <p class="text-gray-800">Bonjour ! 👋 Je suis votre assistant d'orientation académique. Posez-moi vos questions sur les formations disponibles !</p>
+                                <span class="text-xs text-gray-500 mt-2 block">🤖 FreEduc</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Zone de saisie -->
+                    <div class="border-t p-4 bg-white">
+                        <div class="flex space-x-2">
+                            <input 
+                                type="text" 
+                                id="messageInput"
+                                placeholder="Tapez votre question ici..."
+                                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-academic-light"
+                                onkeypress="handleKeyPress(event)"
+                            >
+                            <button 
+                                onclick="sendMessage()"
+                                class="bg-academic-light text-white px-6 py-2 rounded-lg hover:bg-academic-blue transition-colors"
+                            >
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-2 text-center" id="chatLimit">
+                            Questions restantes : <span id="remainingQuestions" class="font-semibold text-academic-blue">3</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CTA Principal -->
+                <div class="bg-gradient-to-r from-success-green to-green-600 rounded-xl p-6 mt-6 text-center text-white">
+                    <h3 class="text-2xl font-bold mb-2">🎓 Débloquez toutes les fonctionnalités !</h3>
+                    <p class="mb-4">Accédez aux tests d'orientation, recommandations personnalisées et bien plus encore.</p>
+                    <button onclick="openModal('registerModal')" class="bg-white text-success-green px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        Créer mon compte gratuit
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- Catalogue des Formations -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="bg-academic-blue p-4">
+                        <h3 class="text-white font-semibold flex items-center">
+                            <i class="fas fa-book mr-2"></i>Catalogue des Formations
+                        </h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-4">
+                            <div class="border-l-4 border-academic-light pl-4">
+                                <h4 class="font-semibold text-gray-800">Formation Initiale</h4>
+                                <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                    <li>• Génie Logiciel</li>
+                                    <li>• Systèmes et Réseaux</li>
+                                    <li>• Software Engineering</li>
+                                </ul>
+                            </div>
+                            <div class="border-l-4 border-success-green pl-4">
+                                <h4 class="font-semibold text-gray-800">Formation Continue</h4>
+                                <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                                    <li>• Maintenance IT</li>
+                                    <li>• Microsoft Certification</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <button onclick="showRestrictedAccess()" class="w-full mt-4 bg-gray-100 text-gray-600 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+                            Voir plus de formations...
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- FAQ -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="bg-success-green p-4">
+                        <h3 class="text-white font-semibold flex items-center">
+                            <i class="fas fa-question-circle mr-2"></i>Questions Fréquentes
+                        </h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-3">
+                            <div class="cursor-pointer" onclick="toggleFAQ('faq1')">
+                                <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                                    <span class="text-sm font-medium">Comment choisir sa filière ?</span>
+                                    <i class="fas fa-chevron-down text-xs text-gray-400"></i>
+                                </div>
+                                <div id="faq1" class="hidden text-xs text-gray-600 pl-2 mt-2">
+                                    Le choix de filière dépend de vos intérêts, compétences et objectifs de carrière. Nos tests d'orientation vous aideront !
+                                </div>
+                            </div>
+                            <div class="cursor-pointer" onclick="toggleFAQ('faq2')">
+                                <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                                    <span class="text-sm font-medium">Quels sont les débouchés ?</span>
+                                    <i class="fas fa-chevron-down text-xs text-gray-400"></i>
+                                </div>
+                                <div id="faq2" class="hidden text-xs text-gray-600 pl-2 mt-2">
+                                    Nos formations ouvrent vers des carrières en développement, cybersécurité, administration système et plus encore.
+                                </div>
+                            </div>
+                            <div class="cursor-pointer" onclick="toggleFAQ('faq3')">
+                                <div class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                                    <span class="text-sm font-medium">Comment s'inscrire ?</span>
+                                    <i class="fas fa-chevron-down text-xs text-gray-400"></i>
+                                </div>
+                                <div id="faq3" class="hidden text-xs text-gray-600 pl-2 mt-2">
+                                    Créez votre compte gratuit, remplissez votre profil et explorez nos programmes d'orientation personnalisée.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fonctionnalités Bloquées -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="bg-gray-600 p-4">
+                        <h3 class="text-white font-semibold flex items-center">
+                            <i class="fas fa-lock mr-2"></i>Fonctionnalités Premium
+                        </h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-3">
+                            <div onclick="showRestrictedAccess()" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                                <span class="text-sm flex items-center">
+                                    <i class="fas fa-clipboard-check mr-2 text-gray-400"></i>
+                                    Tests d'Orientation
+                                </span>
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <div onclick="showRestrictedAccess()" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                                <span class="text-sm flex items-center">
+                                    <i class="fas fa-user-circle mr-2 text-gray-400"></i>
+                                    Profil Personnalisé
+                                </span>
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <div onclick="showRestrictedAccess()" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                                <span class="text-sm flex items-center">
+                                    <i class="fas fa-star mr-2 text-gray-400"></i>
+                                    Recommandations
+                                </span>
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button onclick="openModal('registerModal')" class="bg-academic-blue text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-800 transition-colors">
+                                Débloquer maintenant
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Connexion -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 m-4 max-w-md w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Connexion</h2>
+                <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+                    <input type="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <button type="submit" class="w-full bg-academic-blue text-white py-2 rounded-lg hover:bg-blue-800 transition-colors">
+                    Se connecter
+                </button>
+            </form>
+            <div class="mt-4 text-center">
+                <span class="text-sm text-gray-600">Pas encore de compte ? </span>
+                <button onclick="closeModal('loginModal'); openModal('registerModal')" class="text-success-green hover:underline text-sm">
+                    S'inscrire ici
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Inscription -->
+    <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 m-4 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Inscription</h2>
+                <button onclick="closeModal('registerModal')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom d'utilisateur</label>
+                    <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+                    <input type="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Numéro Matricule</label>
+                    <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Filière d'intérêt</label>
+                    <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                        <option value="">Sélectionner une filière</option>
+                        <option value="GL">Génie Logiciel</option>
+                        <option value="SR">Systèmes et Réseaux</option>
+                        <option value="SE">Software Engineering</option>
+                        <option value="MI">Maintenance IT</option>
+                        <option value="MC">Microsoft Certification</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-success-green text-white py-2 rounded-lg hover:bg-green-600 transition-colors">
+                    Créer mon compte
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Accès Restreint -->
+    <div id="restrictedModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 m-4 max-w-md w-full text-center">
+            <div class="mb-4">
+                <i class="fas fa-lock text-4xl text-gray-400 mb-4"></i>
+                <h2 class="text-xl font-bold text-gray-800 mb-2">Accès Restreint</h2>
+                <p class="text-gray-600">Cette fonctionnalité est réservée aux étudiants inscrits.</p>
+            </div>
+            <div class="space-y-3">
+                <button onclick="closeModal('restrictedModal'); openModal('registerModal')" class="w-full bg-success-green text-white py-2 rounded-lg hover:bg-green-600 transition-colors">
+                    Créer un compte gratuit
+                </button>
+                <button onclick="closeModal('restrictedModal'); openModal('loginModal')" class="w-full bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition-colors">
+                    J'ai déjà un compte
+                </button>
+                <button onclick="closeModal('restrictedModal')" class="w-full text-gray-500 hover:text-gray-700 py-2">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let questionCount = 0;
+        const maxQuestions = 3;
+
+        // Gestion des modals
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.getElementById(modalId).classList.add('flex');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+
+        // Gestion du chatbot
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            if (questionCount >= maxQuestions) {
+                showRestrictedAccess();
+                return;
+            }
+            
+            // Ajouter message utilisateur
+            addMessage(message, true);
+            input.value = '';
+            questionCount++;
+            
+            // Réponse simulée du bot
+            setTimeout(() => {
+                const responses = [
+                    "Excellente question ! Les formations en Génie Logiciel sont très demandées. Elles couvrent la programmation, la gestion de projet et les méthodologies agiles.",
+                    "Pour les Systèmes et Réseaux, vous apprendrez l'administration système, la sécurité informatique et la gestion d'infrastructures.",
+                    "Le Software Engineering se concentre sur l'architecture logicielle, les tests et la qualité du code. Parfait pour devenir architecte logiciel !",
+                    "Les débouchés sont nombreux : développeur, ingénieur système, consultant IT, chef de projet... Le secteur informatique recrute activement !"
+                ];
+                
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addMessage(randomResponse, false);
+                
+                updateQuestionCounter();
+                
+                if (questionCount >= maxQuestions) {
+                    setTimeout(() => {
+                        addMessage("Vous avez atteint la limite de questions pour les visiteurs. Connectez-vous pour continuer la discussion ! 😊", false, true);
+                    }, 1000);
+                }
+            }, 1500);
+        }
+
+        function addMessage(text, isUser, isSystem = false) {
+            const chatArea = document.getElementById('chatArea');
+            const messageDiv = document.createElement('div');
+            
+            if (isUser) {
+                messageDiv.className = 'flex items-start mb-4 justify-end';
+                messageDiv.innerHTML = `
+                    <div class="bg-academic-light text-white p-3 rounded-lg shadow-sm max-w-xs">
+                        <p>${text}</p>
+                        <span class="text-xs text-blue-100 mt-2 block">Vous</span>
+                    </div>
+                    <div class="bg-academic-light p-2 rounded-full ml-3 flex-shrink-0">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                `;
+            } else {
+                messageDiv.className = 'flex items-start mb-4';
+                const bgColor = isSystem ? 'bg-orange-100 border-l-4 border-orange-400' : 'bg-white';
+                const iconColor = isSystem ? 'bg-orange-400' : 'bg-academic-light';
+                
+                messageDiv.innerHTML = `
+                    <div class="${iconColor} p-2 rounded-full mr-3 flex-shrink-0">
+                        <i class="fas fa-robot text-white text-sm"></i>
+                    </div>
+                    <div class="${bgColor} p-3 rounded-lg shadow-sm max-w-xs">
+                        <p class="text-gray-800">${text}</p>
+                        <span class="text-xs text-gray-500 mt-2 block">🤖 FreEduc</span>
+                    </div>
+                `;
+            }
+            
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function updateQuestionCounter() {
+            const remaining = maxQuestions - questionCount;
+            document.getElementById('remainingQuestions').textContent = remaining;
+            
+            if (remaining <= 0) {
+                document.getElementById('chatLimit').innerHTML = `
+                    <span class="text-orange-600 font-semibold">
+                        Limite atteinte ! <button onclick="openModal('registerModal')" class="text-success-green hover:underline">Inscrivez-vous</button> pour continuer
+                    </span>
+                `;
+            }
+        }
+
+        // Gestion des FAQ
+        function toggleFAQ(faqId) {
+            const faq = document.getElementById(faqId);
+            faq.classList.toggle('hidden');
+        }
+
+        // Affichage modal d'accès restreint
+        function showRestrictedAccess() {
+            openModal('restrictedModal');
+        }
+
+        // Fermer les modals en cliquant à l'extérieur
+        window.onclick = function(event) {
+            if (event.target.classList.contains('fixed')) {
+                const modals = ['loginModal', 'registerModal', 'restrictedModal'];
+                modals.forEach(modalId => {
+                    if (event.target.id === modalId) {
+                        closeModal(modalId);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

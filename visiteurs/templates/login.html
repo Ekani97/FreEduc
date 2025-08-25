@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <title>Connexion</title>
+</head>
+<body>
+    
+    <form method="post" id="loginPost">
+        <p style="text-align: center; color:dodgerblue; font-size: large;font-weight: bold;">Connexion</p>
+        {% csrf_token %}
+        <label for="name">Email</label>
+        <input type="text" id="name" name="name" required placeholder="Entrer votre email!">
+        <br>
+        <label for="mdp">Mot de passe</label>
+        <input type="password" id="mdp" name="mdp" required placeholder="Entrer votre mot de passe">
+        <br>
+        <button type="submit" value="connexion">Connexion</button>
+        Vous n'avez pas de compte? <a href="{%url 'inscription'%}" style="text-align: center;">Inscrivez-vous</a>
+    </form>
+</body>
+</html>
