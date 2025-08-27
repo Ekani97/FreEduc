@@ -463,6 +463,12 @@
             }
         }
 
+
+        document.addEventListener("DOMContentLoaded", function() {
+            openModal('loginModal');
+        });
+
+
         // Gestion des FAQ
         function toggleFAQ(faqId) {
             const faq = document.getElementById(faqId);

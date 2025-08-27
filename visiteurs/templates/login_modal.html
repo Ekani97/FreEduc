@@ -1,0 +1,29 @@
+<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-6 m-4 max-w-md w-full">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-800">Connexion</h2>
+            <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+                <input type="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+            </div>
+            <button type="submit" class="w-full bg-academic-blue text-white py-2 rounded-lg hover:bg-blue-800 transition-colors">
+                Se connecter
+            </button>
+        </form>
+        <div class="mt-4 text-center">
+            <span class="text-sm text-gray-600">Pas encore de compte ? </span>
+            <button onclick="closeModal('loginModal'); openModal('registerModal')" class="text-success-green hover:underline text-sm">
+                S'inscrire ici
+            </button>
+        </div>
+    </div>
+</div>
