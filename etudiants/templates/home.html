@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FreEduc - Orientation Académique Intelligente</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{% static 'js/index.js' %}"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -40,14 +38,31 @@
                 </div>
                 
                 <!-- Boutons Header -->
-                <div class="flex space-x-3">
-                    <button onclick="openModal('loginModal')" class="bg-transparent border-2 border-white text-white px-4 py-2 rounded-lg hover:bg-white hover:text-academic-blue transition-all duration-300">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Connexion
-                    </button>
-                    <button onclick="openModal('registerModal')" class="bg-success-green text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300">
-                        <i class="fas fa-user-plus mr-2"></i>Inscription
-                    </button>
-                </div>
+                {% if user.is_authenticated %}
+                    {% if user.is_etudiant %}
+                        <div class="flex items-center space-x-4">
+                            <span class="text-white">Bienvenue, {{ user.first_name }}!</span>
+                            
+                                <i class="fas fa-user-circle mr-2"></i>
+                            
+                            <a href="{% url 'logout' %}" class="bg-transparent border-2 border-white text-white px-4 py-2 rounded-lg hover:bg-white hover:text-academic-blue transition-all duration-300">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                            </a>
+                        </div>
+
+                
+                {% else %}
+                                 <div class="flex space-x-3">
+                                        <button onclick="openModal('loginModal')" class="bg-transparent border-2 border-white text-white px-4 py-2 rounded-lg hover:bg-white hover:text-academic-blue transition-all duration-300">
+                                            <i class="fas fa-sign-in-alt mr-2"></i>Connexion
+                                        </button>
+                                        <button onclick="openModal('registerModal')" class="bg-success-green text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300">
+                                            <i class="fas fa-user-plus mr-2"></i>Inscription
+                                        </button>
+                                    </div>
+
+                {% endif %}
+                
             </div>
         </div>
     </header>
@@ -234,9 +249,90 @@
         </div>
     </div>
 
-    <!-- Inclusion des modals séparés -->
-    {% include 'login_modal.html' %}
-    {% include 'register_modal.html' %}
+    <!-- Modal Connexion -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 m-4 max-w-md w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Connexion</h2>
+                <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+                    <input type="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <button type="submit" class="w-full bg-academic-blue text-white py-2 rounded-lg hover:bg-blue-800 transition-colors">
+                    Se connecter
+                </button>
+            </form>
+            <div class="mt-4 text-center">
+                <span class="text-sm text-gray-600">Pas encore de compte ? </span>
+                <button onclick="closeModal('loginModal'); openModal('registerModal')" class="text-success-green hover:underline text-sm">
+                    S'inscrire ici
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Inscription -->
+    <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 m-4 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Inscription</h2>
+                <button onclick="closeModal('registerModal')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                        <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom d'utilisateur</label>
+                    <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+                    <input type="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Numéro Matricule</label>
+                    <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Filière d'intérêt</label>
+                    <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-academic-light">
+                        <option value="">Sélectionner une filière</option>
+                        <option value="GL">Génie Logiciel</option>
+                        <option value="SR">Systèmes et Réseaux</option>
+                        <option value="SE">Software Engineering</option>
+                        <option value="MI">Maintenance IT</option>
+                        <option value="MC">Microsoft Certification</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-success-green text-white py-2 rounded-lg hover:bg-green-600 transition-colors">
+                    Créer mon compte
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- Modal Accès Restreint -->
     <div id="restrictedModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">

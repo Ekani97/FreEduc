@@ -18,15 +18,14 @@ class Utilisateur(AbstractUser):
         ('INA', 'Inactif'),
         ('SUS', 'Suspendu'),    
     ]
-    username = models.CharField(max_length=150)
-    email = models.EmailField(unique=True)
     nom = models.CharField(max_length=150)
     prenom = models.CharField(max_length=150)
+    email = models.EmailField(unique=True)
     mdp = models.CharField(max_length=128)
     privilege = models.CharField(max_length=3, choices=PRIVILEGE_CHOICES, default='ETU')
     etat_compte = models.CharField(max_length=3, choices=ETAT_COMPTE_CHOICES, default='ACT')
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username','nom','prenom','privilege','etat_compte']
+    REQUIRED_FIELDS = ['nom','prenom','privilege','etat_compte']
 
     def __str__(self):
         return f"{self.username} ({self.get_privilege_display()})"
@@ -184,7 +183,7 @@ class Etudiant(models.Model):
         related_name="profil_etudiant",
         limit_choices_to={"privilege": "ETU"},
     )
-    numero_matricule = models.CharField(max_length=50, unique=True)
+    idEtudiant = models.AutoField(primary_key=True)
     filiere = models.CharField(max_length=100)
 
     def __str__(self):
